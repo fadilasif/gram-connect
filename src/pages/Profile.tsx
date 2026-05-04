@@ -34,14 +34,8 @@ export const Profile = () => {
 
   const handleSave = () => {
     if (!isValid) return;
-    const oldProfile = storage.getProfile();
     storage.setProfile(profile);
     setSaved(true);
-    
-    // Reload page if language was changed so the rest of the app translates immediately
-    if (oldProfile && oldProfile.language !== profile.language) {
-      window.location.reload();
-    }
   };
 
   return (
@@ -68,8 +62,10 @@ export const Profile = () => {
                 variant={profile.language === 'en' ? 'default' : 'outline'}
                 className={`flex-1 h-12 transition-all ${profile.language === 'en' ? 'shadow-md shadow-primary/20 scale-[1.02]' : 'text-gray-600 hover:bg-gray-50'}`}
                 onClick={() => {
-                  setProfile({...profile, language: 'en'});
-                  setSaved(false);
+                  const newProfile = {...profile, language: 'en'};
+                  setProfile(newProfile);
+                  storage.setProfile(newProfile);
+                  window.location.reload();
                 }}
               >
                 🇬🇧 English
@@ -78,8 +74,10 @@ export const Profile = () => {
                 variant={profile.language === 'hi' ? 'default' : 'outline'}
                 className={`flex-1 h-12 transition-all ${profile.language === 'hi' ? 'shadow-md shadow-primary/20 scale-[1.02]' : 'text-gray-600 hover:bg-gray-50'}`}
                 onClick={() => {
-                  setProfile({...profile, language: 'hi'});
-                  setSaved(false);
+                  const newProfile = {...profile, language: 'hi' as const};
+                  setProfile(newProfile);
+                  storage.setProfile(newProfile);
+                  window.location.reload();
                 }}
               >
                 🇮🇳 हिंदी
