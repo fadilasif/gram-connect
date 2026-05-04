@@ -57,6 +57,8 @@ To run this project locally, follow these steps:
    npm run build
    ```
 
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
 
 ---
 *Built to empower rural communities through accessible technology.*
