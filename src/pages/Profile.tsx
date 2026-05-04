@@ -5,20 +5,23 @@ import type { UserProfile } from '../lib/storage';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { UserCheck } from 'lucide-react';
+import { UserCheck, Globe } from 'lucide-react';
 import { useTranslation } from '../lib/i18n';
 
 export const Profile = () => {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [profile, setProfile] = useState<UserProfile>({ 
-    name: '', phone: '', village: '', landmark: '', pincode: '', language: 'en'
+    name: '', phone: '', village: '', landmark: '', pincode: '', language: lang
   });
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const existing = storage.getProfile();
     if (existing) {
-      setProfile(existing);
+      setProfile({
+        ...existing,
+        language: existing.language || 'en'
+      });
       setSaved(true);
     }
   }, []);
@@ -31,8 +34,14 @@ export const Profile = () => {
 
   const handleSave = () => {
     if (!isValid) return;
+    const oldProfile = storage.getProfile();
     storage.setProfile(profile);
     setSaved(true);
+    
+    // Reload page if language was changed so the rest of the app translates immediately
+    if (oldProfile && oldProfile.language !== profile.language) {
+      window.location.reload();
+    }
   };
 
   return (
@@ -48,6 +57,36 @@ export const Profile = () => {
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
+          
+          <div className="pb-2 border-b border-gray-100 mb-2">
+            <label className="block text-sm font-medium mb-3 flex items-center gap-2">
+              <Globe className="w-4 h-4" /> 
+              {profile.language === 'hi' ? 'भाषा चुनें / Language' : 'Language / भाषा चुनें'}
+            </label>
+            <div className="flex gap-3">
+              <Button 
+                variant={profile.language === 'en' ? 'default' : 'outline'}
+                className={`flex-1 h-12 transition-all ${profile.language === 'en' ? 'shadow-md shadow-primary/20 scale-[1.02]' : 'text-gray-600 hover:bg-gray-50'}`}
+                onClick={() => {
+                  setProfile({...profile, language: 'en'});
+                  setSaved(false);
+                }}
+              >
+                🇬🇧 English
+              </Button>
+              <Button 
+                variant={profile.language === 'hi' ? 'default' : 'outline'}
+                className={`flex-1 h-12 transition-all ${profile.language === 'hi' ? 'shadow-md shadow-primary/20 scale-[1.02]' : 'text-gray-600 hover:bg-gray-50'}`}
+                onClick={() => {
+                  setProfile({...profile, language: 'hi'});
+                  setSaved(false);
+                }}
+              >
+                🇮🇳 हिंदी
+              </Button>
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium mb-1">{t.name}</label>
             <Input
