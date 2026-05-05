@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../lib/storage';
 import type { PackageDelivery } from '../lib/storage';
@@ -20,11 +20,7 @@ export const Package = () => {
   const [packageType, setPackageType] = useState('');
   const [payment, setPayment] = useState<'COD' | 'prepaid'>('prepaid');
   const [codAmount, setCodAmount] = useState('');
-  const [profileExists, setProfileExists] = useState(false);
-
-  useEffect(() => {
-    setProfileExists(storage.isProfileComplete());
-  }, []);
+  const [profileExists] = useState(() => storage.isProfileComplete());
 
   const handleSend = () => {
     if (!profileExists) {

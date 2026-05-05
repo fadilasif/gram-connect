@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../lib/storage';
 import type { CartItem, Order } from '../lib/storage';
@@ -13,13 +13,8 @@ const DELIVERY_FEE = 30;
 export const Cart = () => {
   const navigate = useNavigate();
   const { t, lang } = useTranslation();
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [profileExists, setProfileExists] = useState(false);
-
-  useEffect(() => {
-    setCart(storage.getCart());
-    setProfileExists(storage.isProfileComplete());
-  }, []);
+  const [cart, setCart] = useState<CartItem[]>(() => storage.getCart());
+  const [profileExists] = useState(() => storage.isProfileComplete());
 
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const total = subtotal + (cart.length > 0 ? DELIVERY_FEE : 0);

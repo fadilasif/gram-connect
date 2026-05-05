@@ -9,17 +9,12 @@ import { Profile } from './pages/Profile';
 import { Onboarding } from './components/Onboarding';
 import { SplashScreen } from './components/SplashScreen';
 import { storage } from './lib/storage';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function App() {
-  const [isReady, setIsReady] = useState(false);
-  const [isProfileComplete, setIsProfileComplete] = useState(false);
+  const [isReady] = useState(true);
+  const [isProfileComplete, setIsProfileComplete] = useState(() => storage.isProfileComplete());
   const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    setIsProfileComplete(storage.isProfileComplete());
-    setIsReady(true);
-  }, []);
 
   if (!isReady) return null;
 

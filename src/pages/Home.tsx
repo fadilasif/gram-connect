@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../lib/storage';
 import type { GroceryItem, CartItem } from '../lib/storage';
@@ -62,13 +62,9 @@ const CATEGORY_NAMES: Record<string, { en: string; hi: string; icon: string }> =
 
 export const Home = () => {
   const navigate = useNavigate();
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => storage.getCart());
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const { t, lang } = useTranslation();
-
-  useEffect(() => {
-    setCart(storage.getCart());
-  }, []);
 
   const updateCart = (item: GroceryItem, delta: number) => {
     let newCart = [...cart];

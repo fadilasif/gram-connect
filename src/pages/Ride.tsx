@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { storage } from '../lib/storage';
 import type { RideBooking } from '../lib/storage';
@@ -17,11 +17,7 @@ export const Ride = () => {
   const [drop, setDrop] = useState('');
   const [vehicle, setVehicle] = useState<'scooter' | 'rickshaw'>('scooter');
   const [distance, setDistance] = useState('');
-  const [profileExists, setProfileExists] = useState(false);
-
-  useEffect(() => {
-    setProfileExists(storage.isProfileComplete());
-  }, []);
+  const [profileExists] = useState(() => storage.isProfileComplete());
 
   const distanceNum = parseFloat(distance) || 0;
   

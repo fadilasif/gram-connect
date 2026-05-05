@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { storage } from './storage';
 
 export const t = {
@@ -150,8 +151,23 @@ export const t = {
 };
 
 export const useTranslation = () => {
-  const profile = storage.getProfile();
-  const lang = profile?.language || 'en';
+  const [lang, setLang] = useState<'en' | 'hi'>(() => {
+    const profile = storage.getProfile();
+    return profile?.language || 'en';
+  });
+
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      const profile = storage.getProfile();
+      setLang(profile?.language || 'en');
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChange);
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
+
   return {
     t: t[lang],
     lang

@@ -8,16 +8,22 @@ export const openSMS = (message: string) => {
   window.location.href = `sms:${VENDOR_PHONE}?body=${encodedMessage}`;
 };
 
-const getUserInfoBlock = (isHi: boolean, headerSuffix: string = '') => {
+const getUserInfoBlock = (isHi: boolean, headerSuffix: string = '', includeAddress: boolean = true) => {
   const profile = storage.getProfile();
   if (!profile) return '';
 
   const userDetailsHeader = isHi ? `यूज़र की जानकारी${headerSuffix}` : `USER DETAILS${headerSuffix}`;
   const nameLabel = isHi ? '👤 नाम' : '👤 Name';
   const phoneLabel = isHi ? '📱 फोन' : '📱 Phone';
-  const addressLabel = isHi ? '📍 पता' : '📍 Address';
 
-  return `${userDetailsHeader}\n\n${nameLabel}: ${profile.name}\n${phoneLabel}: ${profile.phone}\n${addressLabel}: ${profile.village}, ${profile.landmark}, ${profile.pincode}`;
+  let block = `${userDetailsHeader}\n\n${nameLabel}: ${profile.name}\n${phoneLabel}: ${profile.phone}`;
+  
+  if (includeAddress) {
+    const addressLabel = isHi ? '📍 पता' : '📍 Address';
+    block += `\n${addressLabel}: ${profile.village}, ${profile.landmark}, ${profile.pincode}`;
+  }
+
+  return block;
 };
 
 export const generateGrocerySMS = (items: CartItem[], subtotal: number, deliveryFee: number, total: number, lang: 'en' | 'hi') => {
@@ -55,9 +61,9 @@ ${paymentLabel}`;
 export const generateRideSMS = (ride: Omit<RideBooking, 'id' | 'timestamp' | 'status'>, lang: 'en' | 'hi') => {
   const isHi = lang === 'hi';
   
-  let vehicleName = '';
-  if (ride.vehicle === 'scooter') vehicleName = isHi ? 'स्कूटर' : 'Scooter';
-  else vehicleName = isHi ? 'रिक्शा' : 'Rickshaw';
+  const vehicleName = ride.vehicle === 'scooter' 
+    ? (isHi ? 'स्कूटर' : 'Scooter') 
+    : (isHi ? 'रिक्शा' : 'Rickshaw');
   
   const title = isHi ? '🛵 राइड बुकिंग' : '🛵 RIDE BOOKING';
   const pickupLabel = isHi ? '📍 पिकअप' : '📍 Pickup';
@@ -67,7 +73,7 @@ export const generateRideSMS = (ride: Omit<RideBooking, 'id' | 'timestamp' | 'st
   const fareLabel = isHi ? '💰 किराया' : '💰 Fare';
   const statusLabel = isHi ? '📌 स्थिति: अनुरोध किया गया' : '📌 Status: REQUESTED';
 
-  const userBlock = getUserInfoBlock(isHi, '');
+  const userBlock = getUserInfoBlock(isHi, '', false);
 
   const message = `002
 
@@ -91,12 +97,9 @@ ${statusLabel}`;
 export const generatePackageSMS = (pkg: Omit<PackageDelivery, 'id' | 'timestamp' | 'status'>, lang: 'en' | 'hi') => {
   const isHi = lang === 'hi';
   
-  let paymentText = '';
-  if (pkg.payment === 'COD' && pkg.codAmount) {
-    paymentText = isHi ? `कैश (₹${pkg.codAmount})` : `COD (₹${pkg.codAmount})`;
-  } else {
-    paymentText = isHi ? 'प्रीपेड' : 'Prepaid';
-  }
+  const paymentText = (pkg.payment === 'COD' && pkg.codAmount)
+    ? (isHi ? `कैश (₹${pkg.codAmount})` : `COD (₹${pkg.codAmount})`)
+    : (isHi ? 'प्रीपेड' : 'Prepaid');
 
   const title = isHi ? '📦 कूरियर डिलीवरी' : '📦 PACKAGE DELIVERY';
   const pickupLabel = isHi ? '📍 पिकअप' : '📍 Pickup';
@@ -107,7 +110,7 @@ export const generatePackageSMS = (pkg: Omit<PackageDelivery, 'id' | 'timestamp'
   const paymentLabel = isHi ? '💰 पेमेंट' : '💰 Payment';
   const statusLabel = isHi ? '📌 स्थिति: अनुरोध किया गया' : '📌 Status: REQUESTED';
 
-  const userBlock = getUserInfoBlock(isHi, '-');
+  const userBlock = getUserInfoBlock(isHi, '-', false);
 
   const message = `002
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { storage } from '../lib/storage';
 import type { UserProfile } from '../lib/storage';
@@ -10,21 +10,11 @@ import { useTranslation } from '../lib/i18n';
 
 export const Profile = () => {
   const { t, lang } = useTranslation();
-  const [profile, setProfile] = useState<UserProfile>({ 
-    name: '', phone: '', village: '', landmark: '', pincode: '', language: lang
-  });
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
+  const [profile, setProfile] = useState<UserProfile>(() => {
     const existing = storage.getProfile();
-    if (existing) {
-      setProfile({
-        ...existing,
-        language: existing.language || 'en'
-      });
-      setSaved(true);
-    }
-  }, []);
+    return existing ? { ...existing, language: existing.language || lang } : { name: '', phone: '', village: '', landmark: '', pincode: '', language: lang };
+  });
+  const [saved, setSaved] = useState(() => !!storage.getProfile());
 
   const isValid = profile.name.trim() !== '' && 
                   profile.phone.trim().length >= 10 && 
@@ -62,10 +52,12 @@ export const Profile = () => {
                 variant={profile.language === 'en' ? 'default' : 'outline'}
                 className={`flex-1 h-12 transition-all ${profile.language === 'en' ? 'shadow-md shadow-primary/20 scale-[1.02]' : 'text-gray-600 hover:bg-gray-50'}`}
                 onClick={() => {
-                  const newProfile = {...profile, language: 'en'};
-                  setProfile(newProfile);
-                  storage.setProfile(newProfile);
-                  window.location.reload();
+                  const existing = storage.getProfile();
+                  if (existing) {
+                    storage.setProfile({...existing, language: 'en'});
+                  }
+                  setProfile({...profile, language: 'en'});
+                  window.dispatchEvent(new Event('languageChanged'));
                 }}
               >
                 🇬🇧 English
@@ -74,10 +66,12 @@ export const Profile = () => {
                 variant={profile.language === 'hi' ? 'default' : 'outline'}
                 className={`flex-1 h-12 transition-all ${profile.language === 'hi' ? 'shadow-md shadow-primary/20 scale-[1.02]' : 'text-gray-600 hover:bg-gray-50'}`}
                 onClick={() => {
-                  const newProfile = {...profile, language: 'hi' as const};
-                  setProfile(newProfile);
-                  storage.setProfile(newProfile);
-                  window.location.reload();
+                  const existing = storage.getProfile();
+                  if (existing) {
+                    storage.setProfile({...existing, language: 'hi'});
+                  }
+                  setProfile({...profile, language: 'hi'});
+                  window.dispatchEvent(new Event('languageChanged'));
                 }}
               >
                 🇮🇳 हिंदी
