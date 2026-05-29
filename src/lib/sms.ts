@@ -107,12 +107,13 @@ export const generatePackageSMS = (pkg: Omit<PackageDelivery, 'id' | 'timestamp'
   const receiverNameLabel = isHi ? '👤 पाने वाला' : '👤 Receiver';
   const receiverPhoneLabel = isHi ? '📱 फोन' : '📱 Phone';
   const packageLabel = isHi ? '📦 सामान' : '📦 Package';
+  const weightLabel = isHi ? '⚖️ वजन' : '⚖️ Weight';
   const paymentLabel = isHi ? '💰 पेमेंट' : '💰 Payment';
   const statusLabel = isHi ? '📌 स्थिति: अनुरोध किया गया' : '📌 Status: REQUESTED';
 
   const userBlock = getUserInfoBlock(isHi, '-', false);
 
-  const message = `002
+  const message = `003
 
 ${userBlock}
 
@@ -125,6 +126,7 @@ ${receiverNameLabel}: ${pkg.receiverName}
 ${receiverPhoneLabel}: ${pkg.receiverPhone}
 
 ${packageLabel}: ${pkg.packageType}
+${weightLabel}: ${pkg.weight || 'N/A'}
 
 ${paymentLabel}: ${paymentText}
 

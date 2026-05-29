@@ -19,7 +19,7 @@ export const t = {
     start: "Start Ordering",
 
     // Navigation
-    home: "Groceries",
+    home: "Home",
     ride: "Ride",
     package: "Package",
     cart: "Cart",
@@ -58,6 +58,8 @@ export const t = {
     receiverName: "Receiver Name",
     receiverPhone: "Receiver Phone",
     packageContents: "Contents",
+    weight: "Weight",
+    weightPlaceholder: "e.g. 2 kg or 500g",
     paymentType: "Payment",
     prepaid: "Prepaid",
     cod: "COD",
@@ -92,7 +94,7 @@ export const t = {
     start: "ऑर्डर शुरू करें",
 
     // Navigation
-    home: "किराना",
+    home: "होम",
     ride: "राइड",
     package: "कूरियर",
     cart: "कार्ट",
@@ -131,6 +133,8 @@ export const t = {
     receiverName: "पाने वाले का नाम",
     receiverPhone: "फोन",
     packageContents: "सामान",
+    weight: "वजन",
+    weightPlaceholder: "उदा. 2 kg या 500g",
     paymentType: "पेमेंट",
     prepaid: "प्रीपेड",
     cod: "कैश",

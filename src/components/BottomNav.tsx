@@ -1,14 +1,14 @@
-import { Store, Bike, Package, ShoppingCart, User } from 'lucide-react';
+import { Home, Bike, Package, ShoppingCart, User } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { storage } from '../lib/storage';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../lib/i18n';
-
+ 
 export const BottomNav = () => {
   const [cartCount, setCartCount] = useState(0);
   const location = useLocation();
-
+ 
   useEffect(() => {
     // A simple interval to poll cart count since we are just using localStorage directly
     const interval = setInterval(() => {
@@ -17,11 +17,11 @@ export const BottomNav = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
+ 
   const { t } = useTranslation();
-
+ 
   const navItems = [
-    { name: t.home, path: '/', icon: Store },
+    { name: t.home, path: '/', icon: Home },
     { name: t.ride, path: '/ride', icon: Bike },
     { name: t.package, path: '/package', icon: Package },
     { name: t.cart, path: '/cart', icon: ShoppingCart, badge: cartCount },

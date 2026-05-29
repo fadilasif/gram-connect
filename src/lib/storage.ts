@@ -52,6 +52,7 @@ export interface PackageDelivery {
   codAmount?: number;
   status: 'assigned' | 'picked' | 'out_for_delivery' | 'delivered' | 'requested';
   timestamp: number;
+  weight?: string;
 }
 
 const STORAGE_KEYS = {

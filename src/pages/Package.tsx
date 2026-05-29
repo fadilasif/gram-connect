@@ -18,6 +18,7 @@ export const Package = () => {
   const [receiverName, setReceiverName] = useState('');
   const [receiverPhone, setReceiverPhone] = useState('');
   const [packageType, setPackageType] = useState('');
+  const [weight, setWeight] = useState('');
   const [payment, setPayment] = useState<'COD' | 'prepaid'>('prepaid');
   const [codAmount, setCodAmount] = useState('');
   const [profileExists] = useState(() => storage.isProfileComplete());
@@ -38,6 +39,7 @@ export const Package = () => {
       receiverName,
       receiverPhone,
       packageType,
+      weight,
       payment,
       codAmount: payment === 'COD' && !isNaN(codAmountNum) ? codAmountNum : undefined,
       status: 'requested',
@@ -57,6 +59,7 @@ export const Package = () => {
                       receiverName.trim() !== '' && 
                       receiverPhone.trim().length >= 10 &&
                       packageType.trim() !== '' &&
+                      weight.trim() !== '' &&
                       (payment === 'prepaid' || (payment === 'COD' && parseFloat(codAmount) > 0));
 
   return (
@@ -111,6 +114,15 @@ export const Package = () => {
               placeholder="e.g. Documents, Clothes"
               value={packageType}
               onChange={e => setPackageType(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">{t.weight}</label>
+            <Input 
+              placeholder={t.weightPlaceholder}
+              value={weight}
+              onChange={e => setWeight(e.target.value)}
             />
           </div>
 
